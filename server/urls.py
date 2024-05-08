@@ -17,9 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from backend import views
+from backend.views.general_view import general_view, general_view2
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("general/", views.general_view),
+    path("general/", general_view, name="general_view"),
+    path("general2/", general_view2)
 ]
