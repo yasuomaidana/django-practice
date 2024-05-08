@@ -8,6 +8,7 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     roles = models.TextField(null=True, blank=True)
 
+    objects = models.Manager()
     class Meta:
         db_table = 'user'
 
