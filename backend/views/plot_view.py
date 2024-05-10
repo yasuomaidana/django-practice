@@ -1,25 +1,24 @@
 import io
-import json
 
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from matplotlib import pyplot as plt
 from numpy import linspace
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from backend.dto.plot_request import PlotRequest
+from server.security.basic_auth import BasicAuth
 
-def generate_plot(data):
-    m = float(data['m'])
-    b = float(data['b'])
-    a = float(data['range']['a'])
-    b_range = float(data['range']['b'])
 
-    x = linspace(a, b_range, 400)
-    y = m * x + b
+def generate_plot(data: PlotRequest):
+    x = linspace(data.range.a, data.range.b, 400)
+    y = data.m * x + data.b
 
     plt.plot(x, y)
-    plt.xlim(a, b_range)
+    plt.xlim(data.range.a, data.range.b)
 
     buffer = io.BytesIO()
     plt.savefig(buffer, format='png')
@@ -31,7 +30,7 @@ def generate_plot(data):
 @api_view(['POST'])
 def plot_function(request):
     try:
-        data = json.loads(request.body)
+        data = PlotRequest.parse_raw(request.body)
         return HttpResponse(generate_plot(data), content_type='image/png')
 
     except Exception as e:
@@ -40,9 +39,11 @@ def plot_function(request):
 
 class PlotFunctionView(APIView):
     last_plot = None
+    authentication_classes = [SessionAuthentication, BasicAuth]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        data = json.loads(request.body)
+        data = PlotRequest.parse_raw(request.body)
         PlotFunctionView.last_plot = generate_plot(data)
         return HttpResponse(self.last_plot, content_type='image/png')
 

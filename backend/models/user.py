@@ -9,6 +9,7 @@ class User(models.Model):
     roles = models.TextField(null=True, blank=True)
 
     objects = models.Manager()
+
     class Meta:
         db_table = 'user'
 
