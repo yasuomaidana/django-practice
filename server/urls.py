@@ -18,9 +18,14 @@ from django.contrib import admin
 from django.urls import path
 
 from backend.views.general_view import general_view, general_view2
+from backend.views.plot_view import plot_function, PlotFunctionView
+from backend.views.show_plot import show_plot
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("general/", general_view, name="general_view"),
-    path("general2/", general_view2)
+    path("general2/", general_view2),
+    path("plot/", plot_function, name="plot_function"),
+    path("plot2/", PlotFunctionView.as_view(), name="plot_function2"),
+    path("show_plot/", show_plot, name="show_plot"),
 ]
