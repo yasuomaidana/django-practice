@@ -40,7 +40,10 @@ def plot_function(request):
 class PlotFunctionView(APIView):
     last_plot = None
     authentication_classes = [SessionAuthentication, BasicAuth]
-    permission_classes = [IsAuthenticated]
+    permission_classes_by_action = {
+        'post': [IsAuthenticated],
+        'get': [],
+    }
 
     def post(self, request):
         data = PlotRequest.parse_raw(request.body)
