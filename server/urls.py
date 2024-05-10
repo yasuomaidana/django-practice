@@ -15,12 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from backend.views.general_view import general_view, general_view2
 from backend.views.plot_view import plot_function, PlotFunctionView
 from backend.views.show_plot import show_plot
+from backend.views.ticket_view import TicketViewSet
 from backend.views.user_view import get_user
+
+router = DefaultRouter()
+router.register(r'ticket', TicketViewSet, basename='ticket')
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,5 +35,6 @@ urlpatterns = [
     path("plot/", plot_function, name="plot_function"),
     path("plot2/", PlotFunctionView.as_view(), name="plot_function2"),
     path("show_plot/", show_plot, name="show_plot"),
-    path("user", get_user, name="get_user")
+    path("user", get_user, name="get_user"),
+    path("", include(router.urls)),
 ]
