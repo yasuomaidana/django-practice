@@ -30,4 +30,12 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         ticket_id = list(self.kwargs.values())[0]
-        return Ticket.objects.filter(id=ticket_id)
+        return Ticket.objects.get(id=ticket_id)
+
+    def list(self, request, *args, **kwargs):
+        try:
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset, many=False)
+            return Response(serializer.data)
+        except Ticket.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
