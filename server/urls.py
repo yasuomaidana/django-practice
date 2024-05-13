@@ -29,7 +29,7 @@ from backend.views.user_view import get_user
 router = DefaultRouter()
 router.register(r'ticket', TicketViewSet, basename='ticket')
 tickets_router = NestedSimpleRouter(router, r'ticket', lookup='ticket')
-tickets_router.register(r'description', CommentViewSet, basename='ticket-comments')
+tickets_router.register(r'description', CommentViewSet, basename='ticket-description')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
