@@ -2,7 +2,7 @@ from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 
 from backend.models import Ticket
-from serializer.ticket_serializer import TicketSerializer, TicketCreateSerializer
+from serializer.ticket_serializer import TicketSerializer, TicketCreateSerializer, DescriptionSerializer
 
 
 class TicketViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -22,3 +22,12 @@ class TicketViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.Cre
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = DescriptionSerializer
+    queryset = Ticket.objects.all()
+
+    def get_queryset(self):
+        ticket_id = list(self.kwargs.values())[0]
+        return Ticket.objects.filter(id=ticket_id)
