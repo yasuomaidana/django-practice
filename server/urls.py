@@ -16,17 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+
 from rest_framework.routers import DefaultRouter
+from rest_framework_nested.routers import NestedSimpleRouter
 
 from backend.views.general_view import general_view, general_view2
 from backend.views.plot_view import plot_function, PlotFunctionView
 from backend.views.show_plot import show_plot
-from backend.views.ticket_view import TicketViewSet
+from backend.views.ticket_view import TicketViewSet, CommentViewSet
 from backend.views.user_view import get_user
 
 router = DefaultRouter()
 router.register(r'ticket', TicketViewSet, basename='ticket')
-
+tickets_router = NestedSimpleRouter(router, r'ticket', lookup='ticket')
+tickets_router.register(r'description', CommentViewSet, basename='ticket-comments')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -37,4 +40,5 @@ urlpatterns = [
     path("show_plot/", show_plot, name="show_plot"),
     path("user", get_user, name="get_user"),
     path("", include(router.urls)),
+    path("", include(tickets_router.urls)),
 ]

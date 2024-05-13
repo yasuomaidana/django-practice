@@ -5,3 +5,4 @@ mysqlclient
 numpy
 matplotlib
 pydantic
+drf-nested-routers
