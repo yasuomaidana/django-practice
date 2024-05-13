@@ -15,3 +15,7 @@ class TicketCreateSerializer(serializers.ModelSerializer):
         fields = ('category', 'description')  # Explicitly mentioning fields for creation
 
 
+class DescriptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = ['description']
